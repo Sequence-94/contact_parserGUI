@@ -9,11 +9,15 @@
 #include<QTextDocument>
 #include<QMessageBox>
 #include<QDebug>
+#include<QTextCharFormat>
+#include<QFont>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent),loadButton(new QPushButton("Load")),
     processButton(new QPushButton("Process")),
-    textEditor(new QTextEdit(this)),textDocument(new QTextDocument(this))
+    textEditor(new QTextEdit(this)),
+    textDocument(new QTextDocument(this)),
+    textCursor(new QTextCursor(textDocument))
 {
     contactParserGui();
     setFixedSize(800,500);
@@ -36,7 +40,7 @@ void Widget::contactParserGui()
 }
 
 void Widget::loadFile()
-{
+{  //qDebug()<<"loading file...";
     QString fileName =
         QFileDialog::getOpenFileName(this,
                                     tr("Open File"),
@@ -66,8 +70,35 @@ void Widget::loadFile()
 }
 
 void Widget::processFile()
-{
+{  //qDebug()<<"processing file...";
 
+    QTextCursor cursor(textDocument);
+
+    cursor.movePosition(QTextCursor::Start);
+    while(!cursor.atEnd()){//qDebug() << "formating file...";
+        cursor = textDocument->find(emailExpress,cursor);
+        if(!cursor.isNull()){
+            QTextCharFormat format;
+            format.setFontWeight(QFont::Bold);
+            cursor.mergeCharFormat(format);
+
+        }else{
+            break;
+        }
+    }
+
+    cursor.movePosition(QTextCursor::Start);
+    while(!cursor.atEnd()){//qDebug() << "formating file...";
+        cursor = textDocument->find(phoneExpress,cursor);
+        if(!cursor.isNull()){
+            QTextCharFormat format;
+            format.setFontWeight(QFont::Bold);
+            cursor.mergeCharFormat(format);
+
+        }else{
+            break;
+        }
+    }
 }
 
 
