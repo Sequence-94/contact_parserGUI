@@ -2,11 +2,18 @@
 #include<QPushButton>
 #include<QGridLayout>
 #include<QTextEdit>
+#include<QFileDialog>
+#include<QFile>
+#include<QTextStream>
+#include<QTextCursor>
+#include<QTextDocument>
+#include<QMessageBox>
+#include<QDebug>
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent),loadButton(new QPushButton("Load")),
     processButton(new QPushButton("Process")),
-    textEditor(new QTextEdit(this))
+    textEditor(new QTextEdit(this)),textDocument(new QTextDocument(this))
 {
     contactParserGui();
     setFixedSize(800,500);
@@ -30,6 +37,31 @@ void Widget::contactParserGui()
 
 void Widget::loadFile()
 {
+    QString fileName =
+        QFileDialog::getOpenFileName(this,
+                                    tr("Open File"),
+                                    "/home",
+                                    tr("Text files (*.txt)"));
+    if(fileName.isEmpty()){
+        QMessageBox msgBox;
+        msgBox.setText("Failed to pick a file. Try again.");
+        msgBox.exec();
+    }
+
+    QFile file(fileName);
+    if(!file.open(QIODevice::ReadOnly | QIODevice::Text)){
+        QMessageBox msgBox;
+        msgBox.setText("Failed to open file.Try again.");
+        msgBox.exec();
+
+    }
+
+    QTextStream cin(&file);
+    QString info = cin.readAll();
+    //qDebug()<<info;
+    textDocument->setPlainText(info);
+
+    textEditor->setDocument(textDocument);
 
 }
 

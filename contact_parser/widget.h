@@ -4,6 +4,7 @@
 #include <QWidget>
 class QPushButton;
 class QTextEdit;
+class QTextDocument;
 class Widget : public QWidget
 {
     Q_OBJECT
@@ -19,5 +20,6 @@ private:
     QPushButton *loadButton;
     QPushButton *processButton;
     QTextEdit *textEditor;
+    QTextDocument *textDocument;
 };
 #endif // WIDGET_H
